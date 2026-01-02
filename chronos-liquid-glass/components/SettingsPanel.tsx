@@ -43,14 +43,30 @@ const SettingsPanel: React.FC<Props> = ({ isOpen, onToggle, settings, updateSett
         <div className="absolute inset-0 bg-marble-texture opacity-5 mix-blend-overlay pointer-events-none" />
 
         <div className="relative z-10 flex flex-col h-full">
-          {/* Luxury Header */}
+          {/* Luxury Header with Adobe-style Logo */}
           <div className="px-8 py-8 border-b border-black/5 flex justify-between items-center bg-white/40 shrink-0 backdrop-blur-md">
-            <div className="flex flex-col">
-              <h2 className="text-3xl font-serif tracking-widest text-black" style={{ fontFamily: '"Bodoni Moda", serif' }}>
-                Atelier
-              </h2>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-gray-500 mt-1 pl-1">Configuration</p>
+            <div className="flex items-center gap-4">
+              {/* Adobe-style Logo Block */}
+              <div 
+                className="w-14 h-14 bg-black rounded-lg flex items-center justify-center shadow-lg transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500"
+                style={{ border: `1px solid ${currentTheme.accentColor}` }}
+              >
+                <span 
+                  className="text-2xl font-serif font-bold text-white tracking-tighter"
+                  style={{ fontFamily: '"Bodoni Moda", serif' }}
+                >
+                  Vc
+                </span>
+              </div>
+
+              <div className="flex flex-col">
+                <h2 className="text-xl font-serif tracking-[0.2em] text-black leading-none" style={{ fontFamily: '"Bodoni Moda", serif' }}>
+                  Atelier
+                </h2>
+                <p className="text-[9px] uppercase tracking-[0.4em] text-gray-400 mt-1">Vision Clock Pro</p>
+              </div>
             </div>
+            
             <button 
               onClick={onToggle} 
               className="p-3 -mr-3 hover:bg-black/5 rounded-full transition-all duration-300 hover:rotate-90 group"
