@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Clock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts incl. Luxury additions. Added 700 weight to M PLUS Rounded 1c -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700&family=JetBrains+Mono:wght@300;700&family=Orbitron:wght@400;900&family=Playfair+Display:ital,wght@0,400;1,700&family=Syncopate:wght@400;700&family=Fredoka+One&family=Quicksand:wght@300;700&family=Bungee&family=Monoton&family=Russo+One&family=Press+Start+2P&family=DotGothic16&family=Zen+Maru+Gothic:wght@400;700&family=Kaisei+Tokumin:wght@400;700&family=Dela+Gothic+One&family=Montserrat:wght@400;900&family=Oswald:wght@400;700&family=Poppins:wght@400;900&family=Pacifico&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Cinzel:wght@400;700&family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Marble / Stone Texture Generator */
+        .bg-marble-texture {
+            background-color: transparent;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            background-size: 150px 150px;
+        }
+
+        @keyframes liquid {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        }
+        .liquid-blob {
+            animation: liquid 15s ease-in-out infinite;
+        }
+
+        /* High-End Crystal Glass Effect - Refined (Black Smoked Glass) */
+        .crystal-card {
+            /* 黒みを帯びたスモークガラスに変更 */
+            background: rgba(15, 15, 20, 0.45); 
+            backdrop-filter: blur(25px) saturate(120%);
+            -webkit-backdrop-filter: blur(25px) saturate(120%);
+            
+            /* ジュエリーケースのようなエッジ */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.25), 
+                inset 0 0 30px rgba(0, 0, 0, 0.1);
+            
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* Dark Mode Crystal Variation */
+        .dark .crystal-card {
+             background: rgba(5, 5, 5, 0.6);
+             border: 1px solid rgba(255, 255, 255, 0.08);
+             border-top: 1px solid rgba(255, 255, 255, 0.2);
+             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* LUXURY TEXT GRADIENTS */
+        .text-luxury-gold {
+            background: linear-gradient(
+                to bottom,
+                #dfd2b5 0%,
+                #ffecb3 20%,
+                #d4af37 55%,
+                #b58412 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .text-luxury-platinum {
+            background: linear-gradient(
+                to bottom,
+                #ffffff 0%,
+                #f2f2f2 45%,
+                #a6a6a6 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .t-nums {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* CUSTOM LUXURY TOGGLE SWITCH */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #1a1a1a;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #1a1a1a;
+        }
+        .toggle-checkbox:checked + .toggle-label:before {
+            transform: translateX(100%);
+            background: linear-gradient(to bottom, #fff, #e0e0e0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-label {
+            width: 44px;
+            height: 24px;
+            background-color: #e5e5e5;
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .toggle-label:before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
